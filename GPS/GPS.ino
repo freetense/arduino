@@ -11,12 +11,18 @@ void loop()
 {
   float flat, flon;
   unsigned long age;
+  int year;
+  byte month, day, hour, minute, second, hundredths;
+  gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age);
   gps.f_get_position(&flat, &flon, &age);
  if(TinyGPS::GPS_INVALID_F_ANGLE != flat){
   Serial.print(flat, 6);
   Serial.print(" ");
   Serial.print(flon, 6);
-  Serial.println(); 
+  Serial.print(" ");
+  Serial.print(hour);
+  Serial.print(":");
+  Serial.println(minute); 
  }
   smartdelay(1000);
 }
