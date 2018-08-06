@@ -7,6 +7,8 @@ String result1 = "i";
 float flat, flon;
 unsigned long age;
 int year;
+int pin = 5;
+int res = 0;
 byte month, day, hour, minute, second, hundredths;
 SoftwareSerial portOne(10, 11);
 SoftwareSerial portToo(7, 8); // RX, TX
@@ -15,11 +17,33 @@ void setup()
   Serial.begin(9600);
   portOne.begin(9600);
   portToo.begin(9600);
+  
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, HIGH);
+  delay(1000);
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW);
+    delay(100);
+  portToo.listen();
+  portToo.println("AT+CSCLK=1");
+  delay(1000);
 }
 void loop()
-{
+{  
 
    if(result1 == "i"){
+   delay(5);
+   portToo.println("AT+CREG?");
+   if (portToo.available()) {                     // Если есть, что считывать...
+     _response = ReadGSM();                // ... считываем и запоминаем
+   }
+   delay(100);
+   res =  _response.indexOf("+CREG: 0,1");
+   if(res > 0){
+   }else{
+    in_it();
+   }
+    digitalWrite(5, LOW);
      result1 = "n";
      portOne.listen();
      delay(100);
@@ -33,12 +57,33 @@ void loop()
      delay(5000);
      }
      portToo.listen();
+     portToo.println("AT+SAPBR=0,1");
+     delay(10000);
      portToo.println("AT+CUSD=1,\"*105#\"");                // ...и отправляем полученную команду модему
    }
     balance();
+    digitalWrite(5, HIGH);
 
 
 }
+void in_it(){
+    while(1){
+      char value1 = 'e';
+      int c;
+      String v = "";
+  while (portToo.available()) {  //сохраняем входную строку в переменную v
+    c = portToo.read();
+    v += char(c);
+    delay(10);
+    value1 = 'i';
+  }
+  if(value1 == 'i'){
+  Serial.println(v);
+  }
+       res =  v.indexOf("Tele2");
+    if (res > 0) break;    // и если он в "готовности", выходим из цикла
+ }     
+  }
 void balance(){
   if (portToo.available())   {// Если модем, что-то отправил...
             long _timeout = millis() + 10000;             // Переменная для отслеживания таймаута (10 секунд)
@@ -64,6 +109,16 @@ void gprs(){
   int d = 400;
  Serial.println("Send start");
  Serial.println("setup url");
+  portToo.println(result);
+  delay(d * 2);
+  _response = ReadGSM();
+    _response.trim();
+      if ( _response.startsWith(result)) {                // Убираем из ответа дублирующуюся команду
+       result =  _response.substring( _response.indexOf("\r\n", result.length()) + 2);
+    }
+  Serial.println(_response);
+  delay(d);
+  result = "AT+HTTPPARA=\"URL\",\"http://mumuka.000webhostapp.com/?a=2\"";
   portToo.println(result);
   delay(d * 2);
   _response = ReadGSM();
