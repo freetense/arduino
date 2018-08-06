@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
 String value;
-SoftwareSerial ss(10, 11); // RX, TX
+SoftwareSerial ss(7, 8); // RX, TX
 void setup()
 {
   Serial.begin(9600);

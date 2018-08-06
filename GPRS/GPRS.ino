@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-SoftwareSerial GSMport(10, 11); // RX, TX
+SoftwareSerial GSMport(7, 8); // RX, TX
 int char_;
 int SensorPin = 10;
 int SensorState = 7;
