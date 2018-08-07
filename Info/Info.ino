@@ -25,7 +25,7 @@ void setup()
   digitalWrite(pin, LOW);
     delay(100);
   portToo.listen();
-  portToo.println("AT+CSCLK=1");
+  portToo.println("AT+CSCLK=0");
   delay(1000);
 }
 void loop()
@@ -37,6 +37,7 @@ void loop()
    if (portToo.available()) {                     // Если есть, что считывать...
      _response = ReadGSM();                // ... считываем и запоминаем
    }
+   Serial.println(_response);
    delay(100);
    res =  _response.indexOf("+CREG: 0,1");
    if(res > 0){
