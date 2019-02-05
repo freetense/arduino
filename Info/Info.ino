@@ -25,7 +25,7 @@ void setup()
   digitalWrite(pin, LOW);
     delay(100);
   portToo.listen();
-  portToo.println("AT+CSCLK=0");
+  portToo.println("AT+CSCLK=1");
   delay(1000);
 }
 void loop()
@@ -96,7 +96,7 @@ void balance(){
             if (_response.startsWith("+CUSD:")) {       // Пришло уведомление о USSD-ответе
                 _response = _response.substring(_response.indexOf("\"") + 1);  // Получаем непосредственно содержимое ответа
                 _response = _response.substring(0, _response.indexOf("\""));
-                _response = UCS2ToString(_response); // Декодируем ответ
+               // _response = UCS2ToString(_response); // Декодируем ответ
                 Serial.println(_response);
             }else{
                 Serial.println(_response);
